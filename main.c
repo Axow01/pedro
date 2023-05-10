@@ -19,6 +19,8 @@ typedef	struct s_info
 {
 	mlx_image_t	*image;
 	mlx_t		*mlx;
+	double		x;
+	double		y;
 }				info_t;
 
 void	ft_quit(void *mlx)
@@ -50,12 +52,17 @@ void	ft_cursor(double xpos, double ypos, void *cursor)
 	info_t *info;
 
 	info = cursor;
-	
-	info->image->instances[0].y = ypos;
-	info->image->instances[0].x = xpos;
+	info->x = xpos;
+	info->y = ypos;
+	info->image->instances[0].y = ypos - (info->image->height / 2);
+	info->image->instances[0].x = xpos - (info->image->width / 2);
 	info->image->instances[0].z = info->image->count;
+}
+
+void	ft_loop(info_t *info)
+{
 	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
-		mlx_image_to_window(info->mlx, info->image, xpos, ypos);
+		mlx_image_to_window(info->mlx, info->image, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
 }
 
 int	main(void)
@@ -77,8 +84,10 @@ int	main(void)
 	mlx_close_hook(mlx, (mlx_closefunc)ft_quit, mlx);
 	info.image = hello;
 	info.mlx = mlx;
+	mlx_set_cursor_mode(mlx, MLX_MOUSE_HIDDEN);
 	mlx_key_hook(mlx, ft_key, &info);
 	mlx_cursor_hook(mlx, (mlx_cursorfunc)ft_cursor, &info);
+	mlx_loop_hook(mlx, ft_loop, &info);
 	mlx_loop(mlx);
 	return (0);
 }
