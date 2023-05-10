@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <time.h>
 #include "MLX42/include/MLX42/MLX42.h"
 
 typedef	struct s_info
