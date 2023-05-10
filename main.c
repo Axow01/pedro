@@ -19,8 +19,11 @@ typedef	struct s_info
 {
 	mlx_image_t	*image;
 	mlx_t		*mlx;
+	mlx_image_t	*back;
 	double		x;
 	double		y;
+	mlx_texture_t *sex;
+	mlx_image_t		*ped2;
 }				info_t;
 
 void	ft_quit(void *mlx)
@@ -28,6 +31,16 @@ void	ft_quit(void *mlx)
 	printf("closed\n");
 	mlx_terminate(mlx);
 	exit(1);
+}
+
+int generateRandomNumber(int instanceIndex) {
+    // Seed the random number generator with the current time and instance index
+    srand(time(NULL) + instanceIndex);
+
+    // Generate a random number between -5 and 5
+    int randomNumber = rand() % 11 - 5;
+
+    return randomNumber;
 }
 
 void	ft_key(mlx_key_data_t key, void *mlx)
@@ -44,6 +57,9 @@ void	ft_key(mlx_key_data_t key, void *mlx)
 	{
 		while (++i < info->image->count)
 			info->image->instances[i].enabled = false;
+		i = -1;
+		while (++i < info->ped2->count)
+			info->ped2->instances[i].enabled = false;
 	}
 }
 
@@ -61,8 +77,26 @@ void	ft_cursor(double xpos, double ypos, void *cursor)
 
 void	ft_loop(info_t *info)
 {
+	int 		i;
+
+
+	i = 0;
+
+	while (++i < info->image->count)
+	{
+			info->image->instances[i].y += generateRandomNumber(i);
+			info->image->instances[i].x -= generateRandomNumber(i);
+	}
+	i = 0;
+	while (++i < info->ped2->count)
+	{
+			info->ped2->instances[i].y += generateRandomNumber(i);
+			info->ped2->instances[i].x -= generateRandomNumber(i);
+	}
 	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
 		mlx_image_to_window(info->mlx, info->image, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
+	else if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_RIGHT))
+		mlx_image_to_window(info->mlx, info->ped2, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
 }
 
 int	main(void)
@@ -74,11 +108,15 @@ int	main(void)
 	info_t			info;
 
 	printf("hello world!");
-	mlx = mlx_init(1500, 920, "LGBTQ", false);
-	ppr = mlx_load_png("ppr.png");
+	mlx = mlx_init(1500, 920, "PEDRO PASCAL OMG !", false);
+	ppr = mlx_load_png("better.png");
 	flag = mlx_texture_to_image(mlx, ppr);
-	hello = mlx_texture_to_image(mlx, mlx_load_png("pedro.png"));
+	info.sex = mlx_load_png("pedro.png");
+	info.back = flag;
+	info.ped2 = mlx_texture_to_image(mlx, mlx_load_png("ped2.png"));
+	hello = mlx_texture_to_image(mlx, info.sex);
 	mlx_image_to_window(mlx, flag, 0, 0);
+	mlx_put_string(mlx, "RESET = C  ---  NEW PEDRO = MOUSE CLICK", 10, 10);
 	mlx_image_to_window(mlx, hello, (mlx->width / 2) - (hello->width / 2), (mlx->height / 2) - (hello->height / 2));
 	hello->enabled = true;
 	mlx_close_hook(mlx, (mlx_closefunc)ft_quit, mlx);

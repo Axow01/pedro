@@ -2,6 +2,8 @@
 	"files.associations": {
 		"mlx42.h": "c",
 		"functional": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"cstdlib": "c",
+		"algorithm": "c"
 	}
 }
