@@ -62,6 +62,10 @@ void	ft_key(mlx_key_data_t key, void *mlx)
 		while (++i < info->ped2->count)
 			info->ped2->instances[i].enabled = false;
 	}
+	else if (key.key == MLX_MOUSE_BUTTON_LEFT)
+		mlx_image_to_window(info->mlx, info->image, info->x, info->y);
+	else if (key.key == MLX_MOUSE_BUTTON_RIGHT)
+		mlx_image_to_window(info->mlx, info->ped2, info->x, info.y);
 }
 
 void	ft_cursor(double xpos, double ypos, void *cursor)
@@ -88,19 +92,15 @@ void	ft_loop(info_t *info)
 		if (info->image->instances[i].x > info->mlx->width || info->image->instances[i].y > info->mlx->height)
 			info->image->instances[i].enabled = false;
 	}
-	i = 0;
+	i = -1;
 	while (++i < info->ped2->count)
 	{
 		if (info->ped2->instances[i].enabled)
 			info->ped2->instances[i].y += generateRandomNumber(i);
-		if (info->ped2->instances[i].x > info->mlx->width || info->ped2->instances[i].y > info->mlx->height)
+		if ((info->ped2->instances[i].x > info->mlx->width || info->ped2->instances[i].x < 0) || (info->ped2->instances[i].y > info->mlx->height || info->ped2->instances[i].y < 0))
 			info->ped2->instances[i].enabled = false;
 	}
 	info->image->instances[0].z = info->image->count;
-	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
-		mlx_image_to_window(info->mlx, info->image, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
-	else if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_RIGHT))
-		mlx_image_to_window(info->mlx, info->ped2, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
 }
 
 int	main(void)
