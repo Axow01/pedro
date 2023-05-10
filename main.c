@@ -67,7 +67,7 @@ int	main(void)
 	info_t			info;
 
 	printf("hello world!");
-	mlx = mlx_init(800, 494, "LGBTQ", false);
+	mlx = mlx_init(1920, 1186, "LGBTQ", false);
 	ppr = mlx_load_png("ppr.png");
 	flag = mlx_texture_to_image(mlx, ppr);
 	hello = mlx_texture_to_image(mlx, mlx_load_png("pedro.png"));
