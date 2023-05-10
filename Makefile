@@ -12,7 +12,7 @@ mlx:
 	@echo "MLX42 build done!"
 
 all: mlx
-	@$(CC) $(SRC) $(MLX) -Iinclude -ldl -lglfw -pthread -lm -o $(NAME)
+	$(CC) $(SRC) $(MLX) -Iinclude -ldl -lglfw -pthread -lm -o $(NAME)
 	@echo "Build succesfully ! :)"
 
 fclean:
@@ -23,3 +23,4 @@ fclean:
 
 mac: mlx
 	$(CC) $(SRC) $(MLX) -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.8/lib/" -o pedro
+	@echo "Build finished !"

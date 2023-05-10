@@ -73,27 +73,30 @@ void	ft_cursor(double xpos, double ypos, void *cursor)
 	info->y = ypos;
 	info->image->instances[0].y = ypos - (info->image->height / 2);
 	info->image->instances[0].x = xpos - (info->image->width / 2);
-	info->image->instances[0].z = info->image->count;
 }
 
 void	ft_loop(info_t *info)
 {
 	int 		i;
 
-
 	i = 0;
 
 	while (++i < info->image->count)
 	{
+		if (info->image->instances[i].enabled)
 			info->image->instances[i].y += generateRandomNumber(i);
-			info->image->instances[i].x -= generateRandomNumber(i);
+		if (info->image->instances[i].x > info->mlx->width || info->image->instances[i].y > info->mlx->height)
+			info->image->instances[i].enabled = false;
 	}
 	i = 0;
 	while (++i < info->ped2->count)
 	{
+		if (info->ped2->instances[i].enabled)
 			info->ped2->instances[i].y += generateRandomNumber(i);
-			info->ped2->instances[i].x -= generateRandomNumber(i);
+		if (info->ped2->instances[i].x > info->mlx->width || info->ped2->instances[i].y > info->mlx->height)
+			info->ped2->instances[i].enabled = false;
 	}
+	info->image->instances[0].z = info->image->count;
 	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
 		mlx_image_to_window(info->mlx, info->image, info->x - (info->image->width / 2), info->y - (info->image->height / 2));
 	else if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_RIGHT))
