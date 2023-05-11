@@ -39,6 +39,16 @@ int generateRandomNumber(int instanceIndex) {
     srand(time(NULL) + instanceIndex);
 
     // Generate a random number between -5 and 5
+    int randomNumber = rand() % 21 - 10;
+
+    return randomNumber;
+}
+
+int generateRandomNumberX(int instanceIndex) {
+    // Seed the random number generator with the current time and instance index
+    srand(time(NULL) + instanceIndex);
+
+    // Generate a random number between -5 and 5
     int randomNumber = rand() % 11 - 5;
 
     return randomNumber;
@@ -62,10 +72,6 @@ void	ft_key(mlx_key_data_t key, void *mlx)
 		while (++i < info->ped2->count)
 			info->ped2->instances[i].enabled = false;
 	}
-	else if (key.key == MLX_MOUSE_BUTTON_LEFT)
-		mlx_image_to_window(info->mlx, info->image, info->x, info->y);
-	else if (key.key == MLX_MOUSE_BUTTON_RIGHT)
-		mlx_image_to_window(info->mlx, info->ped2, info->x, info.y);
 }
 
 void	ft_cursor(double xpos, double ypos, void *cursor)
@@ -88,7 +94,10 @@ void	ft_loop(info_t *info)
 	while (++i < info->image->count)
 	{
 		if (info->image->instances[i].enabled)
+		{
 			info->image->instances[i].y += generateRandomNumber(i);
+			info->image->instances[i].x += generateRandomNumberX(i);
+		}
 		if (info->image->instances[i].x > info->mlx->width || info->image->instances[i].y > info->mlx->height)
 			info->image->instances[i].enabled = false;
 	}
@@ -96,11 +105,18 @@ void	ft_loop(info_t *info)
 	while (++i < info->ped2->count)
 	{
 		if (info->ped2->instances[i].enabled)
+		{
 			info->ped2->instances[i].y += generateRandomNumber(i);
+			info->ped2->instances[i].x += generateRandomNumberX(i);
+		}
 		if ((info->ped2->instances[i].x > info->mlx->width || info->ped2->instances[i].x < 0) || (info->ped2->instances[i].y > info->mlx->height || info->ped2->instances[i].y < 0))
 			info->ped2->instances[i].enabled = false;
 	}
 	info->image->instances[0].z = info->image->count;
+	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
+		mlx_image_to_window(info->mlx, info->image, info->x, info->y);
+	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_RIGHT))
+		mlx_image_to_window(info->mlx, info->ped2, info->x, info->y);
 }
 
 int	main(void)
@@ -112,7 +128,7 @@ int	main(void)
 	info_t			info;
 
 	printf("hello world!");
-	mlx = mlx_init(1500, 920, "PEDRO PASCAL OMG !", false);
+	mlx = mlx_init(1500, 920, "PEDRO PASCAL OMG !", true);
 	ppr = mlx_load_png("better.png");
 	flag = mlx_texture_to_image(mlx, ppr);
 	info.sex = mlx_load_png("pedro.png");
