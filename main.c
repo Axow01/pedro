@@ -10,22 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-#include "MLX42/include/MLX42/MLX42.h"
-
-typedef	struct s_info
-{
-	mlx_image_t	*image;
-	mlx_t		*mlx;
-	mlx_image_t	*back;
-	double		x;
-	double		y;
-	mlx_texture_t *sex;
-	mlx_image_t		*ped2;
-}				info_t;
+#include "pedro.h"
 
 void	ft_quit(void *mlx)
 {
@@ -65,13 +50,7 @@ void	ft_key(mlx_key_data_t key, void *mlx)
 	if (key.key == MLX_KEY_ESCAPE)
 		ft_quit(info->mlx);
 	else if (key.key == MLX_KEY_C)
-	{
-		while (++i < info->image->count)
-			info->image->instances[i].enabled = false;
-		i = -1;
-		while (++i < info->ped2->count)
-			info->ped2->instances[i].enabled = false;
-	}
+		remove_pedro(info, 4);
 }
 
 void	ft_cursor(double xpos, double ypos, void *cursor)
@@ -88,35 +67,22 @@ void	ft_cursor(double xpos, double ypos, void *cursor)
 void	ft_loop(info_t *info)
 {
 	int 		i;
+	static int	count = 0;
+	pedro_t	*current = info->pedro;
 
 	i = 0;
 
-	while (++i < info->image->count)
+	while (current->next)
 	{
-		if (info->image->instances[i].enabled)
-		{
-			info->image->instances[i].y += generateRandomNumber(i);
-			info->image->instances[i].x += generateRandomNumberX(i);
-		}
-		if (info->image->instances[i].x > info->mlx->width || info->image->instances[i].y > info->mlx->height)
-			info->image->instances[i].enabled = false;
-	}
-	i = -1;
-	while (++i < info->ped2->count)
-	{
-		if (info->ped2->instances[i].enabled)
-		{
-			info->ped2->instances[i].y += generateRandomNumber(i);
-			info->ped2->instances[i].x += generateRandomNumberX(i);
-		}
-		if ((info->ped2->instances[i].x > info->mlx->width || info->ped2->instances[i].x < 0) || (info->ped2->instances[i].y > info->mlx->height || info->ped2->instances[i].y < 0))
-			info->ped2->instances[i].enabled = false;
+		current->img->instances[0].y += generateRandomNumber(i);
+		current->img->instances[0].x += generateRandomNumberX(i++);
+		current = current->next;
 	}
 	info->image->instances[0].z = info->image->count;
-	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT))
-		mlx_image_to_window(info->mlx, info->image, info->x, info->y);
-	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_RIGHT))
-		mlx_image_to_window(info->mlx, info->ped2, info->x, info->y);
+	if (mlx_is_mouse_down(info->mlx, MLX_MOUSE_BUTTON_LEFT)) {
+		add_pedro(info);
+		count++;
+	}
 }
 
 int	main(void)
@@ -128,12 +94,12 @@ int	main(void)
 	info_t			info;
 
 	printf("hello world!");
+	info.pedro = calloc(1, sizeof(pedro_t));
 	mlx = mlx_init(1500, 920, "PEDRO PASCAL OMG !", true);
 	ppr = mlx_load_png("better.png");
 	flag = mlx_texture_to_image(mlx, ppr);
 	info.sex = mlx_load_png("pedro.png");
 	info.back = flag;
-	info.ped2 = mlx_texture_to_image(mlx, mlx_load_png("ped2.png"));
 	hello = mlx_texture_to_image(mlx, info.sex);
 	mlx_image_to_window(mlx, flag, 0, 0);
 	mlx_put_string(mlx, "RESET = C  ---  NEW PEDRO = MOUSE CLICK", 10, 10);

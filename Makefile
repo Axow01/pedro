@@ -1,9 +1,18 @@
 CC = gcc
+
 NAME = pedro
-SRC = main.c
-OBJ = ${SRCS:.c=.o}
+
+SRC = main.c new_image.c
+
+OBJ = ${SRC:.c=.o}
+
 MLX = MLX42/build/libmlx42.a
 
+all: $(NAME)
+
+$(NAME): $(OBJ) mlx
+	$(CC) $(OBJ) $(MLX) -g -Iinclude -ldl -lglfw -pthread -lm -o $(NAME)
+	@echo "Build succesfully ! :)"
 
 mlx:
 	@mkdir -p MLX42/build
@@ -11,9 +20,6 @@ mlx:
 	@make -C MLX42/build -j4
 	@echo "MLX42 build done!"
 
-all: mlx
-	$(CC) $(SRC) $(MLX) -Iinclude -ldl -lglfw -pthread -lm -o $(NAME)
-	@echo "Build succesfully ! :)"
 
 fclean:
 	@rm -f $(OBJ)
