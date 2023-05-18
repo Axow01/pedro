@@ -27,6 +27,6 @@ fclean:
 	@rm $(NAME)
 	@echo "Fclean complete :)"
 
-mac: mlx
-	$(CC) $(SRC) $(MLX) -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.8/lib/" -o pedro
+mac: mlx $(OBJ)
+	$(CC) $(OBJ) $(MLX) -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/Users/mmarcott/.brew/opt/glfw/lib/" -o pedro
 	@echo "Build finished !"

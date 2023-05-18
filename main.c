@@ -50,7 +50,7 @@ void	ft_key(mlx_key_data_t key, void *mlx)
 	if (key.key == MLX_KEY_ESCAPE)
 		ft_quit(info->mlx);
 	else if (key.key == MLX_KEY_C)
-		remove_pedro(info, 4);
+		remove_pedro(info, 10);
 }
 
 void	ft_cursor(double xpos, double ypos, void *cursor)

@@ -43,6 +43,6 @@ void	add_pedro(info_t *info);
 // This function deletes all the pedros.
 void	remove_pedro(info_t *info, int count);
 
-int	get_pedro_size(pedro_t *pedro);
+int		get_pedro_size(pedro_t *pedro);
 
 #endif
